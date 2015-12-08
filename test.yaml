@@ -1,0 +1,27 @@
+---
+cust_id:     "cars"
+create_date:  "3102015"
+
+network:
+  cidrblock: "172.28.0.0/16"
+  subnets:
+     webPublic:
+       type: "public"
+       count: 3
+       netmask: "23"
+     webPrivate:
+       type: "private"
+       count: 3
+       netmask: "23"
+     app:
+       type: "private"
+       count: 3
+       netmask: "23"
+     database:
+       type: "private"
+       count: 3
+       netmask: "24"
+     mgmt:
+      type: "public"
+      count: 3
+      netmask: "24"
