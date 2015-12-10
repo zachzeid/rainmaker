@@ -1,5 +1,5 @@
 ---
-cust_id:     "cars"
+cust_id:     "Herp, King of Derps"
 create_date:  "3102015"
 
 network:
@@ -25,3 +25,9 @@ network:
       type: "public"
       count: 3
       netmask: "24"
+
+security:
+  cidrblock: "172.28.0.0/16"
+  nacls:
+    count: 3
+
