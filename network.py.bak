@@ -6,8 +6,6 @@ from troposphere import GetAZs, Parameter, Output, Ref, GetAtt, FindInMap
 import sys, ipcalc
 from netaddr import *
 from Reader import YAMLReader as reader
-import collections
-
 class makeVpc(object):
 
 
@@ -28,43 +26,39 @@ class makeVpc(object):
 		file = self.load_file
 		cidr = file['network']['cidrblock']
 		network = file['network']
-		reference_list = []
+
 		vpcipblock = self.t.add_parameter(Parameter("VPCIPBLOCK", \
 		Description="IP Block for VPC",
 		Default=cidr,
 		Type="String"))
 
-		EnvName = self.t.add_parameter(Parameter("EnvName", \
-		Description="Name of Environment to be deployed.",
+		stackname = self.t.add_parameter(Parameter("StackName", \
+		Description="Name of stack to be deployed.",
 		Default=file['cust_id'],
 		Type="String"))
 
 		for k,v in network['subnets'].iteritems():
-			count = 1
+			count = 0
 			if v['type'] == "public":
 				create_subnets = self.subnetting(network['cidrblock'], v['netmask'])
-				while count <= v['count']:
+				while count < v['count']:
 					randomsubnet = random.choice(create_subnets)
-					self.subnet = self.t.add_parameter(Parameter("%ssubnet%s" % (k, count), \
+					subnet = self.t.add_parameter(Parameter("%s%s" % (k, count), \
 					Description="Subnet IP Block",
 					Type="String",
 					Default=str(randomsubnet)))
-					reference_list.append("%ssubnet%s" % (k, count))
 					count += 1
 			elif v['type'] == "private":
 				create_subnets = self.subnetting(network['cidrblock'], v['netmask'])
-				while count <= v['count']:
+				while count < v['count']:
 					v['type'], v['count'], count
 					randomsubnet = random.choice(create_subnets)
-					self.subnet = self.t.add_parameter(Parameter("%ssubnet%s" % (k,count), \
+					subnet = self.t.add_parameter(Parameter("%s%s" % (k,count), \
 					Description="Private Subnet IP Blocks",
 					Type="String",
 					Default=str(randomsubnet)))
-					reference_list.append("%ssubnet%s" % (k, count))
 					count +=1
-		create_subnets = self.createSubnets(reference_list)
-		template = self.t.to_json()
-		return template
+		return self.t.to_json()
 
 	def subnetting(self, cidrBlock, subnets):
 		networks = subnets
@@ -76,20 +70,40 @@ class makeVpc(object):
 			assigned_subnets.append(subnet)
 		return  assigned_subnets
 		
-	def createSubnets(self, reference_list):
+	def createSubnets(self):
 		file = self.load_file
 		network = file['network']
 		available_zones = GetAZs(Ref("AWS::Region"))
-		count = 0
-		for reference in reference_list:
-			subnet = ec2.Subnet("%s%s" %(count, reference))
-			subnet.CidrBlock=Ref(reference)
-			subnet.VpcId = Ref("VPC")
-			subnet.AvailabilityZone = Select("%s" % count, available_zones)
-			self.t.add_resource(subnet)
-			#self.t.add_output(Output(Ref(reference), Description = "SubnetId", Value = "Subnet"))
-			#self.publicsubs.append("%s%s" %(k, count))
-			count +=1
+		for k,v in network['subnets'].iteritems():
+			count = 0
+			if v['type'] == "public":
+				create_subnets = self.subnetting(network['cidrblock'], v['netmask'])
+				while count < v['count']:
+					subnet = ec2.Subnet("%s%s" % (k, count))
+					random_subnets = random.choice(create_subnets)
+					create_subnets.remove(random_subnets)
+					subnet.CidrBlock=str(random_subnets)
+					subnet.VpcId = Ref("VPC")
+					subnet.AvailabilityZone = Select("%s" % count, available_zones)
+					self.t.add_resource(subnet)
+					self.t.add_output(Output("%s%s" % (k, count), Description = "SubnetId", Value=Ref(subnet)))
+					self.publicsubs.append("%s%s" %(k, count))
+					count += 1
+			elif v['type'] == "private":
+				create_subnets = self.subnetting(network['cidrblock'], v['netmask'])
+				while count < v['count']:
+					subnet = ec2.Subnet("%s%s" % (k, count))
+					random_subnets = random.choice(create_subnets)
+					create_subnets.remove(random_subnets)
+					subnet.CidrBlock=str(random_subnets)
+					subnet.VpcId = Ref("VPC")
+					subnet.AvailabilityZone = Select("%s" % count, available_zones)
+					self.t.add_resource(subnet)
+					self.t.add_output(Output("%s%s" % (k, count), Description = "SubnetId", Value=Ref(subnet)))
+					self.privatesubs.append(subnet)
+					count += 1
+			else:
+				print "There seems to be an error, check your YAML file."
 		return self.t.to_json()
 
 

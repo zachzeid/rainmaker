@@ -12,8 +12,9 @@ if args.network:
 	test = network
 	file = args.file[0]
 	vpc = test.makeVpc(file)
-	vpc.createSubnets()
+	vpc.parameters()
+	#vpc.createSubnets()
 	vpc.createVpc()
 	vpc.createInternetGateway()
 	vpc.createRoutingTable()
-	#print vpc.writeTemplateToFile()
+	print vpc.writeTemplateToFile()
