@@ -6,8 +6,6 @@ from troposphere import GetAZs, Parameter, Output, Ref, GetAtt, FindInMap
 import sys, ipcalc
 from netaddr import *
 from Reader import YAMLReader as reader
-import collections
-
 class makeVpc(object):
 
 
@@ -62,9 +60,8 @@ class makeVpc(object):
 					Default=str(randomsubnet)))
 					reference_list.append("%ssubnet%s" % (k, count))
 					count +=1
-		create_subnets = self.createSubnets(reference_list)
-		template = self.t.to_json()
-		return template
+		print reference_list
+		return self.t.to_json()
 
 	def subnetting(self, cidrBlock, subnets):
 		networks = subnets
@@ -76,19 +73,19 @@ class makeVpc(object):
 			assigned_subnets.append(subnet)
 		return  assigned_subnets
 		
-	def createSubnets(self, reference_list):
+	def createSubnets(self):
 		file = self.load_file
 		network = file['network']
 		available_zones = GetAZs(Ref("AWS::Region"))
 		count = 0
-		for reference in reference_list:
-			subnet = ec2.Subnet("%s%s" %(count, reference))
-			subnet.CidrBlock=Ref(reference)
+		for k,v in network['subnets'].iteritems():
+			subnet = ec2.Subnet("%s%s" % (k, count))
+			subnet.CidrBlock=Ref(self.subnet)
 			subnet.VpcId = Ref("VPC")
 			subnet.AvailabilityZone = Select("%s" % count, available_zones)
 			self.t.add_resource(subnet)
-			#self.t.add_output(Output(Ref(reference), Description = "SubnetId", Value = "Subnet"))
-			#self.publicsubs.append("%s%s" %(k, count))
+			self.t.add_output(Output("%s%s" % (k, count), Description = "SubnetId", Value=Ref(subnet)))
+			self.publicsubs.append("%s%s" %(k, count))
 			count +=1
 		return self.t.to_json()
 

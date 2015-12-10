@@ -1,0 +1,462 @@
+{
+    "Parameters": {
+        "EnvName": {
+            "Default": "Herp, King of Derps",
+            "Description": "Name of Environment to be deployed.",
+            "Type": "String"
+        },
+        "VPCIPBLOCK": {
+            "Default": "172.28.0.0/16",
+            "Description": "IP Block for VPC",
+            "Type": "String"
+        },
+        "appsubnet1": {
+            "Default": "172.28.172.0/23",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "appsubnet2": {
+            "Default": "172.28.140.0/23",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "appsubnet3": {
+            "Default": "172.28.164.0/23",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "databasesubnet1": {
+            "Default": "172.28.253.0/24",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "databasesubnet2": {
+            "Default": "172.28.227.0/24",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "databasesubnet3": {
+            "Default": "172.28.134.0/24",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "mgmtsubnet1": {
+            "Default": "172.28.242.0/24",
+            "Description": "Subnet IP Block",
+            "Type": "String"
+        },
+        "mgmtsubnet2": {
+            "Default": "172.28.83.0/24",
+            "Description": "Subnet IP Block",
+            "Type": "String"
+        },
+        "mgmtsubnet3": {
+            "Default": "172.28.142.0/24",
+            "Description": "Subnet IP Block",
+            "Type": "String"
+        },
+        "webPrivatesubnet1": {
+            "Default": "172.28.50.0/23",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "webPrivatesubnet2": {
+            "Default": "172.28.58.0/23",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "webPrivatesubnet3": {
+            "Default": "172.28.144.0/23",
+            "Description": "Private Subnet IP Blocks",
+            "Type": "String"
+        },
+        "webPublicsubnet1": {
+            "Default": "172.28.144.0/23",
+            "Description": "Subnet IP Block",
+            "Type": "String"
+        },
+        "webPublicsubnet2": {
+            "Default": "172.28.114.0/23",
+            "Description": "Subnet IP Block",
+            "Type": "String"
+        },
+        "webPublicsubnet3": {
+            "Default": "172.28.230.0/23",
+            "Description": "Subnet IP Block",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "0appsubnet1": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "0",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "appsubnet1"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "10webPrivatesubnet2": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "10",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "webPrivatesubnet2"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "11webPrivatesubnet3": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "11",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "webPrivatesubnet3"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "12mgmtsubnet1": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "12",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "mgmtsubnet1"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "13mgmtsubnet2": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "13",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "mgmtsubnet2"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "14mgmtsubnet3": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "14",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "mgmtsubnet3"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "1appsubnet2": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "1",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "appsubnet2"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "2appsubnet3": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "2",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "appsubnet3"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "3databasesubnet1": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "3",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "databasesubnet1"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "4databasesubnet2": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "4",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "databasesubnet2"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "5databasesubnet3": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "5",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "databasesubnet3"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "6webPublicsubnet1": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "6",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "webPublicsubnet1"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "7webPublicsubnet2": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "7",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "webPublicsubnet2"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "8webPublicsubnet3": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "8",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "webPublicsubnet3"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "9webPrivatesubnet1": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::Select": [
+                        "9",
+                        {
+                            "Fn::GetAZs": {
+                                "Ref": "AWS::Region"
+                            }
+                        }
+                    ]
+                },
+                "CidrBlock": {
+                    "Ref": "webPrivatesubnet1"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::Subnet"
+        },
+        "AttachGateway": {
+            "Properties": {
+                "InternetGatewayId": {
+                    "Ref": "InternetGateway"
+                },
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::VPCGatewayAttachment"
+        },
+        "InternetGateway": {
+            "Type": "AWS::EC2::InternetGateway"
+        },
+        "VPC": {
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "VPCIPBLOCK"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "Herp, King of Derps"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::VPC"
+        },
+        "privateRoute": {
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "privateRouteTable"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::RouteTable"
+        },
+        "publicRoute": {
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "publicRouteTable"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VPC"
+                }
+            },
+            "Type": "AWS::EC2::RouteTable"
+        }
+    }
+}
